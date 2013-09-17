@@ -1,9 +1,11 @@
 define([
     'mustache!banker',
-    'mustache!research'
+    'mustache!research',
+    'helpers/TooltipHelper'
 ], function(
     bankerTemplate,
-    researchTemplate
+    researchTemplate,
+    TooltipHelper
 ){
     'use strict';
 
@@ -51,14 +53,34 @@ define([
                     $(this).off('click');
                     $(this).remove();
                 });
+
+                $('#loan').hover(function() {
+                    self.loantooltip = new TooltipHelper().displayTooltip("You're running low on funds! Best take a loan.", $('#loan'));
+                }, function() {
+                    new TooltipHelper().removeTooltip(self.loantooltip);
+                });
+
+
+
+            } else if(this.banker.amount > 1000 && this.$('.research-container').find('#loan').length >= 0) {
+                new TooltipHelper().removeTooltip(self.loantooltip);
+                $('#loan').off('click');
+                $('#loan').remove();
             }
 
 
             if (this.banker.amount >= 10000 && !this.upgradesUnlocked.subprime) {
-                console.log("UNLOCKED SUB_PRIME");
                 this.upgradesUnlocked.subprime = true;
                 this.$('.research-container').append(researchTemplate({research: "sub-prime"}));
+
+                $('#sub-prime').hover(function() {
+                    self.subprimetooltip = new TooltipHelper().displayTooltip("Twice as many mortgages appear in the market! What could go wrong!", $('#sub-prime'));
+                }, function() {
+                    new TooltipHelper().removeTooltip(self.subprimetooltip);
+                });
+
                 $('#sub-prime').on('click', function() {
+                    new TooltipHelper().removeTooltip(self.subprimetooltip);
                     self.spawnHelper.addBroker();
                     $(this).off('click');
                     $(this).remove();
