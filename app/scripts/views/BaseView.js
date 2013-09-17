@@ -74,6 +74,15 @@ define([
             this.listenTo(this.mortgageInventoryView.collection, 'defaulted', this.onDefault);
         },
 
+        events: {
+            "click": "advanceTicker",
+        },
+
+        advanceTicker: function() {
+            this.newsTickerView.updateTicker();
+        },
+            
+
         render: function(){
             this.$el.html(baseTemplate());
 
@@ -147,11 +156,9 @@ define([
                 this.mortgageInventoryView.collection.add(mortgageModel);
                 mortgage.remove();
             }else {
-                console.log("NO");
+                this.mortgageMarketView.displayLowFundsTooltip();
             }
-
         },
-
 
         onBroughtUpgrade: function(upgrade) {
             if (upgrade == "sub-prime") {
