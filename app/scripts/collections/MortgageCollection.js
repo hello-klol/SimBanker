@@ -7,7 +7,7 @@ define([
 
     return Backbone.Collection.extend({
 
-        defaultChance: 0.5,
+        defaultChance: 0.01,
 
         model: MortgageModel,
 
