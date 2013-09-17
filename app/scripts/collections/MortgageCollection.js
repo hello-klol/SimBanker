@@ -21,6 +21,7 @@ define([
             if(Math.random() < this.defaultChance){
                 randomIndex = Math.floor(Math.random() * this.length);
                 randomMortgage = this.at(randomIndex);
+                randomMortgage.isDefaulted = true;
                 this.trigger('defaulted', randomMortgage.toJSON());
                 this.remove(randomMortgage);
             }
