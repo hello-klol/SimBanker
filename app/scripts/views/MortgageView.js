@@ -9,6 +9,8 @@ define([
 
     return Backbone.View.extend({
 
+
+
         render: function(){
             this.$el = mortgageTemplate();
             return this;
@@ -17,8 +19,11 @@ define([
         remove: function(){
             var boundRemove = _(Backbone.View.prototype.remove).bind(this);
 
-            this.displayTooltip();
-
+            if (this.model.isDefaulted) {
+                this.displayTooltip();
+    
+            };
+            
             this.$el.animate({opacity: 0}, 1000, function(){
                 boundRemove();
             });
