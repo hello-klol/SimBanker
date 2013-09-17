@@ -12,7 +12,6 @@ define([
         initialize: function(){
             this.age=0;
             this.prices=JSON.parse(prices);
-            console.log(this.prices);
         },
 
         render: function(){
@@ -23,7 +22,6 @@ define([
         updatePrice: function(){
             this.age++;
             var nextPrice = this.prices[this.age % this.prices.length];
-            console.log(nextPrice);
             var housepriceitem = houseprice(nextPrice);
             housepriceitem.remove();
             this.$el.html(housepriceitem);
