@@ -38,7 +38,7 @@ define([
         add: function(mortgage) {
             var m = new MortgageView({ model: mortgage });
             this.mortgageViews.push(m);
-            this.main.append(m.render().$el);
+            this.main.append(m.render(mortgage.get('type')).$el);
         },
 
         remove: function(mortgage) {

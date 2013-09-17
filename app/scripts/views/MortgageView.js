@@ -11,8 +11,8 @@ define([
 
 
 
-        render: function(){
-            this.$el = mortgageTemplate();
+        render: function(houseType){
+            this.$el = mortgageTemplate({type: houseType});
             this.tooltipHelper = new TooltipHelper();
             return this;
         },
