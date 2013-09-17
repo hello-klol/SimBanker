@@ -53,7 +53,17 @@ define([
                     $(this).off('click');
                     $(this).remove();
                 });
+
+                $('#loan').hover(function() {
+                    self.loantooltip = new TooltipHelper().displayTooltip("You're running low on funds! Best take a loan.", $('#loan'));
+                }, function() {
+                    new TooltipHelper().removeTooltip(self.loantooltip);
+                });
+
+
+
             } else if(this.banker.amount > 1000 && this.$('.research-container').find('#loan').length >= 0) {
+                new TooltipHelper().removeTooltip(self.loantooltip);
                 $('#loan').off('click');
                 $('#loan').remove();
             }

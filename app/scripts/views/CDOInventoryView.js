@@ -1,11 +1,13 @@
 define([
     'mustache!cdoInventory',
     'collections/CDOCollection',
-    'views/CDOView'
+    'views/CDOView',
+    'helpers/TooltipHelper'
 ], function(
     cdoInventoryTemplate,
     CDOCollection,
-    CDOView
+    CDOView,
+    TooltipHelper
 ){
     'use strict';
 
@@ -44,6 +46,12 @@ define([
             this.$el.off('click', '#buy-cdo');
 
             this.$el.on('click', '#buy-cdo', _(this.buyCDO).bind(this));
+
+            $('#buy-cdo').hover(function() {
+                    self.tooltip = new TooltipHelper().displayTooltip("We could package a bunch (3) of mortgages into a box, and sell it to investors!.", $('#buy-cdo'));
+            }, function() {
+                    new TooltipHelper().removeTooltip(self.tooltip);
+            });
  
             return this;
 
