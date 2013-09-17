@@ -48,6 +48,20 @@ body {
     overflow: hidden;
 }
 
+.houseprice {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    font-weight: bold;
+}
+
+.pricechange {
+    text-align: right;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: #C3503F;
+}
+
 .breaking-news {
     color: #FFF;
     background-color: #C3503F;
