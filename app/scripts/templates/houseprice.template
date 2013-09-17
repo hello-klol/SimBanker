@@ -1,0 +1,5 @@
+<div id="avghouseprice" class="houseprice">
+	<p>
+		<span class="houseprice">{{ price }}</span> <span class="pricechange">{{ change }}</span> 
+	</p>
+</div>

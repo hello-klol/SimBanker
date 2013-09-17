@@ -1,6 +1,7 @@
 define([
     'views/MortgageMarketView',
     'views/NewsTickerView',
+    'views/HousePriceView',
     'views/IncomeView',
     'views/MortgageInventoryView',
     'views/CDOInventoryView',
@@ -12,6 +13,7 @@ define([
 ], function(
     MortgageMarketView,
     NewsTickerView,
+    HousePriceView,
     IncomeView,
     MortgageInventoryView,
     CDOInventoryView,
@@ -27,6 +29,8 @@ define([
 
         initialize: function(){
 
+            this.clickCount = 0;
+
             this.banker = {
                 amount: 0
             };
@@ -41,6 +45,7 @@ define([
 
             this.mortgageMarketView = new MortgageMarketView();
             this.newsTickerView = new NewsTickerView();
+            this.housePriceView = new HousePriceView();
 
             this.mortgageInventoryView = new MortgageInventoryView();
             this.cdoInventoryView = new CDOInventoryView({
@@ -77,6 +82,9 @@ define([
 
             this.newsTickerView.$el = this.$('.news-ticker');
             this.newsTickerView.render();
+
+            this.housePriceView.$el = this.$('.house-price');
+            this.housePriceView.render();
 
             this.bankerView.$el = this.$('.banker');
             this.bankerView.render();
@@ -122,11 +130,15 @@ define([
         },
 
         onBoughtMortgage: function(mortgage){
-
             var type = mortgage.data('type');
             var mortgageModel = MortgageHelper.createModel(type);
             var worth =  mortgageModel.get('valuation') * 500
             if (this.banker.amount > worth) {
+                this.clickCount++;
+                
+                if(this.clickCount % 5 == 0) {
+                    this.housePriceView.updatePrice();
+                }
 
                 this.banker.amount -= worth;
                 this.income.increment += mortgageModel.get('valuation');
