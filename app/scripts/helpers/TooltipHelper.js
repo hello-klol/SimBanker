@@ -11,9 +11,9 @@ define([
 
         },
 
-        displayTooltip: function(string, after) {
+        displayTooltip: function(s, after) {
             var tooltipData = {
-                message: 'Mortgage defaulted!',
+                message: s,
                 top: after.top - 40,
                 left: after.left - 40
             };
