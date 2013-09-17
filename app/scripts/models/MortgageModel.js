@@ -9,6 +9,7 @@ define([
 
         initialize: function(options){
            this.mortgages = options.mortgages;
+           this.isDefaulted = false;
         },
 
 
