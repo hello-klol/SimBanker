@@ -135,11 +135,9 @@ define([
                 this.mortgageInventoryView.collection.add(mortgageModel);
                 mortgage.remove();
             }else {
-                console.log("NO");
+                this.mortgageMarketView.displayLowFundsTooltip();
             }
-
         },
-
 
         onBroughtUpgrade: function(upgrade) {
             if (upgrade == "sub-prime") {

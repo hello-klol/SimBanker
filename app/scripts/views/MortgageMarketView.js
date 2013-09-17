@@ -1,11 +1,13 @@
 define([
     'helpers/SpawnHelper',
     'mustache!house',
-    'mustache!mortgageMarketView'
+    'mustache!mortgageMarketView',
+    'mustache!tooltip'
 ], function(
     SpawnHelper,
     houseTemplate,
-    mmvTemplate
+    mmvTemplate,
+    tooltipTemplate
 ){
     'use strict';
 
@@ -50,7 +52,18 @@ define([
             house.animate({opacity: 0}, 500, function(){
                 boundHouseRemove();
             });
-        }
+        },
+
+        displayLowFundsTooltip: function(){
+            var tooltipData = {
+                message: 'Low Funds!  Try again later.',
+                top: 64,
+                left: 64,
+            };
+            var tooltip = tooltipTemplate(tooltipData).insertAfter(this.$el);
+
+            tooltip.animate({opacity: 0}, 1000);
+        },
 
     });
 });
