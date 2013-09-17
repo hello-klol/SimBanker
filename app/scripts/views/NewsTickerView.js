@@ -26,26 +26,8 @@ define([
             //if avgHousePrice >= item.housePrice pop item from array and display in newsItem template
             var nextNewsItem = this.items[this.age % this.items.length];
             var newsItem = newsItemTemplate(nextNewsItem);
-            var self = this;
-            window.setTimeout(function() {
-                self.removeNewsItem(newsItem);
-            }, 4000);
-
             this.$el.html(newsItem);
-
-            newsItem.animate({opacity: 1}, 200);
         },
-
-        removeNewsItem: function(newsItem) {
-            var boundUpdateTicker = _(this.updateTicker).bind(this);
-
-            newsItem.animate({opacity: 0}, 200, function(){
-                newsItem.remove();
-            });
-
-            boundUpdateTicker(); //this isn't how updates will work eventually
-        }
-
     });
 });
 

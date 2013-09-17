@@ -69,6 +69,15 @@ define([
             this.listenTo(this.mortgageInventoryView.collection, 'defaulted', this.onDefault);
         },
 
+        events: {
+            "click": "advanceTicker",
+        },
+
+        advanceTicker: function() {
+            this.newsTickerView.updateTicker();
+        },
+            
+
         render: function(){
             this.$el.html(baseTemplate());
 
