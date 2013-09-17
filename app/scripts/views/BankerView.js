@@ -67,7 +67,7 @@ define([
         },
 
         updateCalculatorDisplay: function(){
-            var formattedAmount = formatNaturalNumber(this.banker.amount);
+            var formattedAmount = formatNaturalNumber(this.banker.amount.toFixed(2));
 
             this.$('.calculator-display').html(formattedAmount);
         },
