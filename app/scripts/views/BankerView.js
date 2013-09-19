@@ -46,26 +46,27 @@ define([
             var self = this;
 
 
-            if(this.banker.amount < 1000 && this.$('.research-container').find('#loan').length == 0) {
-                this.$('.research-container').append(researchTemplate({research: "loan"}));
-                $('#loan').on('click', function() {
+            if(this.banker.amount < 1000 && this.$('.research-container').find('#Loan').length == 0) {
+                this.$('.research-container').append(researchTemplate({research: "Loan"}));
+                $('#Loan').on('click', function() {
                     self.banker.amount += self.loanHelper.getLoan();
+                    new TooltipHelper().removeTooltip(self.loantooltip);
                     $(this).off('click');
                     $(this).remove();
                 });
 
-                $('#loan').hover(function() {
-                    self.loantooltip = new TooltipHelper().displayTooltip("You're running low on funds! Best take a loan.", $('#loan'));
+                $('#Loan').hover(function() {
+                    self.loantooltip = new TooltipHelper().displayTooltip("You're low on funds! Best take a loan.", $('#Loan'));
                 }, function() {
                     new TooltipHelper().removeTooltip(self.loantooltip);
                 });
 
 
 
-            } else if(this.banker.amount > 1000 && this.$('.research-container').find('#loan').length >= 0) {
+            } else if(this.banker.amount > 1000 && this.$('.research-container').find('#Loan').length >= 0) {
                 new TooltipHelper().removeTooltip(self.loantooltip);
-                $('#loan').off('click');
-                $('#loan').remove();
+                $('#Loan').off('click');
+                $('#Loan').remove();
             }
 
 

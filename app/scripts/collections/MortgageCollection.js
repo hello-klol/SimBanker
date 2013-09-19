@@ -25,6 +25,10 @@ define([
                 this.trigger('defaulted', randomMortgage.toJSON());
                 this.remove(randomMortgage);
             }
+        },
+
+        setDefaultChance: function(defaultChance) {
+            this.defaultChance = defaultChance;
         }
 
     });

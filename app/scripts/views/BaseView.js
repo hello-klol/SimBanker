@@ -8,6 +8,7 @@ define([
     'views/BankerView',
     'views/InvestorsView',
     'helpers/MortgageHelper',
+    'helpers/InvestorDemandHelper',
     'mustache!base',
     'helpers/LoanHelper'
 ], function(
@@ -20,6 +21,7 @@ define([
     BankerView,
     InvestorsView,
     MortgageHelper,
+    InvestorDemandHelper,
     baseTemplate,
     LoanHelper
 ) {
@@ -128,6 +130,12 @@ define([
             this.incomeView.updateIncomeIncrement();
 
             this.banker.amount += (this.income.increment - this.income.loan);
+            if(this.banker.amount>10000){
+                this.mortgageMarketView.spawnHelper.setSpawnInterval(15000);
+            }
+            if(this.banker.amount>30000){
+                this.mortgageMarketView.spawnHelper.setSpawnInterval(60000);
+            }
 
             this.mortgageInventoryView.collection.mortgageDefault();
 
@@ -145,8 +153,13 @@ define([
             if (this.banker.amount > worth) {
                 this.clickCount++;
                 
-                if(this.clickCount % 5 == 0) {
+                if(this.clickCount % 3 == 0) {
                     this.housePriceView.updatePrice();
+                }
+
+                if(this.clickCount>102) {
+                    this.investorView.investorHelper.stopInvestors();
+                    this.mortgageInventoryView.collection.setDefaultChance(0.4);
                 }
 
                 this.banker.amount -= worth;
@@ -162,7 +175,10 @@ define([
 
         onBroughtUpgrade: function(upgrade) {
             if (upgrade == "sub-prime") {
-
+                this.clickCount = 96;
+                this.investorView.investorHelper.setVisitInterval(25000);
+                this.housePriceView.subPrimePricing();
+                this.mortgageInventoryView.collection.setDefaultChance(0.1);
             };
         },
 

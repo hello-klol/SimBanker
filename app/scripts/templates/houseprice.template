@@ -1,5 +1,5 @@
 <div id="avghouseprice" class="houseprice">
 	<p>
-		<span class="houseprice">Avg. house price £{{ price }}</span> <span class="pricechange">{{ change }}</span> 
+		<span class="houseprice">Avg. house price £{{ price }}</span> <span class="pricechange">Changed : {{ change }}%</span> 
 	</p>
 </div>

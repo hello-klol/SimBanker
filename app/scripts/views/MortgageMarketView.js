@@ -56,7 +56,7 @@ define([
 
         displayLowFundsTooltip: function(){
             var tooltipData = {
-                message: 'Low Funds!  Try again later.',
+                message: 'Low Funds! Get a loan!',
                 top: 64,
                 left: 64,
             };

@@ -7,7 +7,8 @@ Disappearing altogether when house prices drop. */
     return Backbone.Model.extend({
 
         initialize: function(){
-            this.investorVisits = 100;
+            this.visitInterval = 15000;
+            this.allowVisit = true;
             this.investorTypes = [
                 'low',
                 'med',
@@ -18,17 +19,24 @@ Disappearing altogether when house prices drop. */
         },
 
         nextVisitTime: function() {
-            return Math.random() * 5000;
+            return Math.random() * this.visitInterval;
         },
 
         triggerVisit: function(){
-            this.investorVisits--;
-            var typeIndex = (Math.random() * 3);
-            typeIndex = Math.floor(typeIndex);
-            this.trigger('triggerVisit', this.investorTypes[typeIndex]);
-            if (this.investorVisits > 0) {
+            if(this.allowVisit) {
+                var typeIndex = (Math.random() * 3);
+                typeIndex = Math.floor(typeIndex);
+                this.trigger('triggerVisit', this.investorTypes[typeIndex]);
                 window.setTimeout(_.bind(this.triggerVisit, this), this.nextVisitTime());
             }
+        },
+
+        stopInvestors: function(){
+            this.allowVisit = false;
+        },
+
+        setVisitInterval: function(interval){
+            this.visitInterval = interval;
         }
 
     });
