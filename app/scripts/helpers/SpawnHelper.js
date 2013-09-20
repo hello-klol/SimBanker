@@ -9,7 +9,7 @@ define([
 
         initialize: function(){
             this.brokers = 1;
-            this.spawnInterval = 6000;
+            this.spawnInterval = 500;
             this.houseCount = 1000;
             this.houseTypes = _(MortgageHelper.mortgageTypes).pluck('type');
 
@@ -35,11 +35,12 @@ define([
         },
 
         addBroker: function() {
-            this.brokers++;
+            //this.brokers++;
         },
 
         setSpawnInterval: function(interval) {
             this.spawnInterval = interval;
+            console.log("Spawn interval set to " + interval);
         }
 
     });

@@ -50,6 +50,10 @@ define([
             this.mortgageViews = _(this.mortgageViews).without(viewToRemove);
 
             viewToRemove.remove();
+        },
+
+        getNoMortgages: function() {
+            return this.mortgageViews.length;
         }
 
     });

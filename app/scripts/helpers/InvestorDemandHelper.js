@@ -37,7 +37,12 @@ Disappearing altogether when house prices drop. */
 
         setVisitInterval: function(interval){
             this.visitInterval = interval;
+        },
+
+        increaseVisitInterval: function() {
+            this.visitInterval = this.visitInterval*1.3;
         }
+
 
     });
 

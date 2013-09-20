@@ -29,6 +29,10 @@ define([
 
         setDefaultChance: function(defaultChance) {
             this.defaultChance = defaultChance;
+        },
+
+        increaseDefaultChance: function() {
+            this.defaultChance = this.defaultChance * 1.2;
         }
 
     });

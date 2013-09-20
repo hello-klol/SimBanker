@@ -8,15 +8,15 @@ define([
     return Backbone.Model.extend({
 
         initialize: function(){
-            this.interest = 0.1;
+            this.interest = 0.0;
             this.outstandingLoan = 0;
         },
 
 
         getLoan: function() {
-            this.outstandingLoan += 1000;
+            this.outstandingLoan += 2000;
             this.interest += 0.05;
-            return 1000;
+            return 2000;
         },
 
         getPayment: function() {

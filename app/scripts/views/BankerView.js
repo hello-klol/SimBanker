@@ -9,9 +9,8 @@ define([
 ){
     'use strict';
 
-    var MEDIUM_BANKER_THRESHOLD = 5000,
-        FAT_BANKER_THRESHOLD = 20000,
-        EVIL_BANKER_THRESHOLD = 50000;
+    var MEDIUM_BANKER_THRESHOLD = 4000,
+        FAT_BANKER_THRESHOLD = 8000;
 
     function formatNaturalNumber(number){
 
@@ -30,7 +29,6 @@ define([
     return Backbone.View.extend({
 
         initialize: function(options){
-            console.log(options);
             this.banker = options.banker;
             this.spawnHelper = options.spawnHelper;
             this.loanHelper = options.loanHelper;
@@ -44,8 +42,6 @@ define([
 
         updateResearchPanel: function() {
             var self = this;
-
-
             if(this.banker.amount < 1000 && this.$('.research-container').find('#Loan').length == 0) {
                 this.$('.research-container').append(researchTemplate({research: "Loan"}));
                 $('#Loan').on('click', function() {
@@ -61,32 +57,37 @@ define([
                     new TooltipHelper().removeTooltip(self.loantooltip);
                 });
 
-
-
             } else if(this.banker.amount > 1000 && this.$('.research-container').find('#Loan').length >= 0) {
                 new TooltipHelper().removeTooltip(self.loantooltip);
                 $('#Loan').off('click');
                 $('#Loan').remove();
             }
+        },
 
-
-            if (this.banker.amount >= 10000 && !this.upgradesUnlocked.subprime) {
+        showSubprimeUpgrade: function(){
+            var self = this;
+            if(this.$('.research-container').find('#sub-prime').length == 0 && !this.upgradesUnlocked.subprime) {
                 this.upgradesUnlocked.subprime = true;
                 this.$('.research-container').append(researchTemplate({research: "sub-prime"}));
 
                 $('#sub-prime').hover(function() {
-                    self.subprimetooltip = new TooltipHelper().displayTooltip("Twice as many mortgages appear in the market! What could go wrong!", $('#sub-prime'));
+                    self.subprimetooltip = new TooltipHelper().displayTooltip("More mortgages appear in the market!", $('#sub-prime'));
                 }, function() {
                     new TooltipHelper().removeTooltip(self.subprimetooltip);
                 });
 
                 $('#sub-prime').on('click', function() {
+                    self.triggerSubPrime();
                     new TooltipHelper().removeTooltip(self.subprimetooltip);
                     self.spawnHelper.addBroker();
                     $(this).off('click');
                     $(this).remove();
                 });
             }
+        },
+
+        triggerSubPrime: function() {
+            this.trigger('switchToSubPrime');
         },
 
         updateCalculatorDisplay: function(){
@@ -100,10 +101,8 @@ define([
 
             if(amount >= MEDIUM_BANKER_THRESHOLD && amount < FAT_BANKER_THRESHOLD){
                 this.showMediumBanker();
-            } else if(amount >= FAT_BANKER_THRESHOLD && amount < EVIL_BANKER_THRESHOLD){
+            } else if(amount >= FAT_BANKER_THRESHOLD){
                 this.showFatBanker();
-            } else if(amount >= EVIL_BANKER_THRESHOLD){
-                this.showEvilBanker();
             }
         },
 

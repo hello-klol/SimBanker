@@ -10,7 +10,8 @@ define([
     'helpers/MortgageHelper',
     'helpers/InvestorDemandHelper',
     'mustache!base',
-    'helpers/LoanHelper'
+    'helpers/LoanHelper',
+     'mustache!gameOver'
 ], function(
     MortgageMarketView,
     NewsTickerView,
@@ -23,7 +24,8 @@ define([
     MortgageHelper,
     InvestorDemandHelper,
     baseTemplate,
-    LoanHelper
+    LoanHelper,
+    gameOver
 ) {
     'use strict';
 
@@ -32,6 +34,7 @@ define([
         initialize: function(){
 
             this.clickCount = 0;
+            this.subprime = false;
 
             this.banker = {
                 amount: 0
@@ -73,11 +76,13 @@ define([
             this.listenTo(this.bankerView, 'broughtUpgrade', this.onBroughtUpgrade);
             this.listenTo(this.investorView, 'soldCDO', this.onSoldCDO);
             this.listenTo(this.bankerView, 'gotLoan', this.onGotLoan);
+            this.listenTo(this.bankerView, 'switchToSubPrime', this.switchToSubPrime);
             this.listenTo(this.mortgageInventoryView.collection, 'defaulted', this.onDefault);
+            this.listenTo(this.cdoInventoryView.collection, 'defaultedCDO', this.onDefaultCDO);
         },
 
         events: {
-            "click": "advanceTicker",
+            //"click": "advanceTicker",
         },
 
         advanceTicker: function() {
@@ -124,22 +129,35 @@ define([
         },
 
         onTick: function(){
+            console.log("Default rate " + this.mortgageInventoryView.collection.defaultChance);
+            console.log("Spawn interval " + this.mortgageMarketView.spawnHelper.spawnInterval);
+            console.log("My mortgage count " + this.mortgageInventoryView.getNoMortgages());
 
+            if(this.mortgageInventoryView.collection.defaultChance>0.65 
+                && this.mortgageInventoryView.getNoMortgages()==0
+                && (this.banker.amount < 500 || this.mortgageMarketView.spawnHelper.spawnInterval > 20000)) {
+                if(this.$('.game-over-div').find('.game-over').length == 0) {
+                    var timeout = window.setTimeout(function() {
+                        this.$('.game-over-div').append(gameOver());
+                    }, 10000);
+          
+                }
+            }
+            
             this.income.loan = this.loanHelper.getPayment();
 
             this.incomeView.updateIncomeIncrement();
 
             this.banker.amount += (this.income.increment - this.income.loan);
-            if(this.banker.amount>10000){
-                this.mortgageMarketView.spawnHelper.setSpawnInterval(15000);
-            }
-            if(this.banker.amount>30000){
-                this.mortgageMarketView.spawnHelper.setSpawnInterval(60000);
+            
+            if(this.mortgageMarketView.spawnHelper.spawnInterval>10000) {
+                this.bankerView.showSubprimeUpgrade();
             }
 
             this.mortgageInventoryView.collection.mortgageDefault();
+            this.cdoInventoryView.collection.cdoDefault();
 
-            this.bankerView.updateBankerImage();
+            this.bankerView.updateBankerImage(this.clickCount);
             this.bankerView.updateCalculatorDisplay();
             this.bankerView.updateResearchPanel();
 
@@ -153,13 +171,21 @@ define([
             if (this.banker.amount > worth) {
                 this.clickCount++;
                 
+                //every time a mortgage is bought, increase the interval between mortgages showing
+                this.mortgageMarketView.spawnHelper.spawnInterval = this.mortgageMarketView.spawnHelper.spawnInterval*1.2;
+
                 if(this.clickCount % 3 == 0) {
                     this.housePriceView.updatePrice();
                 }
 
-                if(this.clickCount>102) {
-                    this.investorView.investorHelper.stopInvestors();
-                    this.mortgageInventoryView.collection.setDefaultChance(0.4);
+                if(this.subprime) {
+                     this.mortgageInventoryView.collection.increaseDefaultChance();
+                     if(this.mortgageInventoryView.collection.defaultChance>0.4) {
+                        this.investorView.investorHelper.stopInvestors();
+                        this.bankerView.showEvilBanker();
+                     } else {
+                         this.investorView.investorHelper.increaseVisitInterval();
+                     }
                 }
 
                 this.banker.amount -= worth;
@@ -168,9 +194,16 @@ define([
 
                 this.mortgageInventoryView.collection.add(mortgageModel);
                 mortgage.remove();
-            }else {
+            } else {
                 this.mortgageMarketView.displayLowFundsTooltip();
             }
+        },
+
+        switchToSubPrime: function() {
+            this.subprime = true;
+            this.mortgageMarketView.spawnHelper.setSpawnInterval(500);
+            this.mortgageInventoryView.collection.increaseDefaultChance();
+            this.mortgageMarketView.spawnHelper.spawnMortgage();
         },
 
         onBroughtUpgrade: function(upgrade) {
@@ -199,6 +232,21 @@ define([
             this.incomeView.updateIncomeIncrement();
 
             this.banker.amount += mortgage.valuation;
+            this.bankerView.updateCalculatorDisplay();
+        },
+
+        onDefaultCDO: function(cdo){
+            var total = 0;
+
+            _.each(cdo.get('mortgages'), function(m) {
+                total += m.get('valuation');
+
+            });
+
+            this.income.increment -= total;
+            this.incomeView.updateIncomeIncrement();
+
+            this.banker.amount += total;
             this.bankerView.updateCalculatorDisplay();
         }
 

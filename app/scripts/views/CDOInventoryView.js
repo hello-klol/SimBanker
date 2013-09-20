@@ -72,7 +72,7 @@ define([
 
             this.cdoViews = _(this.cdoViews).without(viewToRemove);
 
-            $(viewToRemove.el).remove();
+            viewToRemove.remove();
             this.render();
         },
 

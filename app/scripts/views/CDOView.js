@@ -1,7 +1,9 @@
 define([
-    'mustache!cdo'
+    'mustache!cdo',
+    'helpers/TooltipHelper'
 ], function(
-    cdoTemplate
+    cdoTemplate,
+    TooltipHelper
 ){
     'use strict';
 
@@ -12,8 +14,20 @@ define([
 
         render: function(){
             this.$el = cdoTemplate();
+            this.tooltipHelper = new TooltipHelper();
             return this;
-        }
+        },
 
+        remove: function(){
+            var boundRemove = _(Backbone.View.prototype.remove).bind(this);
+
+            if (this.model.isDefaulted) {
+                this.tooltipHelper.removeTooltip(this.tooltipHelper.displayTooltip("CDO: Defaulted!", this.$el));
+            }
+            
+            this.$el.animate({opacity: 0}, 1000, function(){
+                boundRemove();
+            });
+        },
     });
 });
